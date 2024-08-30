@@ -1,0 +1,56 @@
+name: dockercompose8907294520072490496
+services:
+  db:
+    container_name: some-postgres
+    environment:
+      POSTGRES_DB: productdb
+      POSTGRES_PASSWORD: "12345"
+      POSTGRES_USER: postgres
+    image: postgres
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+        volume: {}
+  productmicroservices:
+    build:
+      context: C:\Users\phong pc\Desktop\microservices\ProductMicroservices
+      dockerfile: ProductMicroservices/Dockerfile
+    container_name: productmicroservices
+    depends_on:
+      db:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      DB_HOST: some-postgres
+      DB_NAME: productdb
+      DB_PASSWORD: "12345"
+      DB_PORT: "5432"
+      DB_USER: postgres
+    image: productmicroservices
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5000
+        published: "5000"
+        protocol: tcp
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+    restart: always
+networks:
+  default:
+    name: dockercompose8907294520072490496_default
+volumes:
+  postgres_data:
+    name: dockercompose8907294520072490496_postgres_data

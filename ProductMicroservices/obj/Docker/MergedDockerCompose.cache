@@ -1,0 +1,19 @@
+name: dockercompose8907294520072490496
+services:
+  productmicroservices:
+    build:
+      context: C:\Users\phong pc\Desktop\microservices\ProductMicroservices
+      dockerfile: ProductMicroservices/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+    image: productmicroservices
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+networks:
+  default:
+    name: dockercompose8907294520072490496_default

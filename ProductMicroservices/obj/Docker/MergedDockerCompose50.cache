@@ -1,0 +1,55 @@
+name: dockercompose8907294520072490496
+services:
+  productmicroservices:
+    build:
+      context: C:\Users\phong pc\Desktop\microservices\ProductMicroservices
+      dockerfile: ProductMicroservices/Dockerfile
+    container_name: products.api
+    depends_on:
+      products.database:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+    image: productmicroservices
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5000
+        published: "5000"
+        protocol: tcp
+      - mode: ingress
+        target: 8080
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: bind
+        source: C:\Users\phong pc\Desktop\microservices\ProductMicroservices\init.sql
+        target: /docker-entrypoint-initdb.d/init.sql
+        bind:
+          create_host_path: true
+  products.database:
+    container_name: products.database
+    environment:
+      POSTGRES_DB: productdb
+      POSTGRES_PASSWORD: "12345"
+      POSTGRES_USER: postgres
+    image: postgres:latest
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\phong pc\Desktop\microservices\ProductMicroservices\.containers\postgres_data
+        target: /var/lib/postgresql/data
+        bind:
+          create_host_path: true
+networks:
+  default:
+    name: dockercompose8907294520072490496_default
