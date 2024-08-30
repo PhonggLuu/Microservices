@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  products.database:
+    image: postgres:latest
+    container_name: products.database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: productdb
+    networks:
+      - default
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.containers/postgres_data:/var/lib/postgresql/data
+
+  productmicroservices:
+    image: productmicroservices
+    restart: always
+    container_name: products.api
+    build:
+      context: .
+      dockerfile: ProductMicroservices/Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - products.database
+    # volumes:
+    #   - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    # volumes:
+    #   - ${APPDATA}/ASP.NET?Https:/home/app/.aspnet/https:ro
+
+volumes:
+  postgres_data:
