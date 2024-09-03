@@ -1,0 +1,6 @@
+# Thư mục Visual Studio
+.vs/
+
+# Các thư mục nhị phân và đối tượng
+bin/
+obj/
